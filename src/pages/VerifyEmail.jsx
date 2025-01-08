@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 
 const VerifyEmail = () => {
   axios.defaults.withCredentials = true;
-  const {backendUrl,isLoggedin,userData,getUserData} = useContext(AppContext)
+  const {backendUrl,isLoggedin,userData,getUserData,setUserData} = useContext(AppContext)
   const inputRef = React.useRef([])
   const navigate = useNavigate();
   const handlesubmit = async (e) => {
@@ -22,11 +22,11 @@ const VerifyEmail = () => {
       const { data } = await axios.post(`${backendUrl}/api/auth/verifyemail`, { otp });
   
       if (data.success) {
-        toast.success(data.message);
-        getUserData();
+        toast.success(data.message||'email verified successfully');
+        userData.isAccountVerfied = true
         navigate('/');
       } else {
-        toast.error(data.message);
+        toast.error(data.message||'error in verfied email');
       }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Something went wrong');
@@ -52,7 +52,7 @@ const VerifyEmail = () => {
     })
   }
   useEffect(()=>{
-    isLoggedin && userData && userData.isAccountVerified && navigate('/')
+    isLoggedin && userData && userData.isAccountVerfied && navigate('/')
   },[isLoggedin,userData])
   return (
     <div className='flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-200 to-purple-400'><img onClick={()=>navigate('/')} src={emailimage} alt='email' className='absolute left-5 sm:left-20 top-5 w-28 sm:w-32 cursor-pointer'/>

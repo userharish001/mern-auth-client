@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
@@ -6,10 +6,11 @@ import { toast } from "react-toastify";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  
+
   const { userData, backendUrl, setUserData, setIsLoggedin } =
-  useContext(AppContext);
-  console.log("userdata IS: ", userData)
+    useContext(AppContext);
+  const [loading,setLoading] = useState(false)
+  console.log("userdata IS: ", userData);
 
   const sendVerification = async () => {
     try {
@@ -17,9 +18,9 @@ const Navbar = () => {
       const { data } = await axios.post(backendUrl + "/api/auth/verifyotp");
       if (data.success) {
         navigate("/verifyemail");
-        toast.success(data.message);
+        toast.success(data.message||'otp is send successfully');
       } else {
-        toast.error(data.message);
+        toast.error(data.message||'error in sending otp');
       }
     } catch (error) {
       toast.error(error.message);
@@ -53,7 +54,7 @@ const Navbar = () => {
           {userData.name[0].toUpperCase()}
           <div className="absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-10">
             <ul className="list-none m-0 p-2 bg-gray-100 text-sm">
-              {!userData.isAccountVerified && (
+              {!userData.isAccountVerfied && (
                 <li
                   onClick={sendVerification}
                   className="py-1 px-2 hover:bg-gray-200 cursor-pointer"
@@ -61,7 +62,6 @@ const Navbar = () => {
                   Verify Email
                 </li>
               )}
-
               <li
                 onClick={logout}
                 className="py-1 px-2 hover:bg-gray-200 cursor-pointer"
