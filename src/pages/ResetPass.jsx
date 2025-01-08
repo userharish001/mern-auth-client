@@ -14,7 +14,7 @@ const ResetPass = () => {
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/verifyotp", { email });
+      const response = await axios.post("https://mern-auth-server-xifg.onrender.com/api/auth/verifyotp", { email });
       if (response.data.success) {
         alert(response.data.msg);
         setStep(2);
@@ -28,7 +28,7 @@ const ResetPass = () => {
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/verifyemail", { email, otp });
+      const response = await axios.post("https://mern-auth-server-xifg.onrender.com/api/auth/verifyemail", { email, otp });
       if (response.data.success) {
         alert(response.data.msg);
         setStep(3);
@@ -42,7 +42,7 @@ const ResetPass = () => {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/resetpassword", { email, otp, newPassword });
+      const response = await axios.post("https://mern-auth-server-xifg.onrender.com/api/auth/resetpassword", { email, otp, newPassword });
       if (response.data.success) {
         alert(response.data.msg);
         navigate("/login");
