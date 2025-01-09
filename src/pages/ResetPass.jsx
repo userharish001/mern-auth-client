@@ -1,20 +1,24 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AppContext } from "../context/AppContext";
 
 const ResetPass = () => {
+  const { backendUrl } = useContext(AppContext);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [step, setStep] = useState(1); // Step 1: Email Form, Step 2: OTP Form, Step 3: New Password Form
+  const [step, setStep] = useState(1);
   const inputRef = useRef([]);
 
   // Function to handle email submission
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://mern-auth-server-xifg.onrender.com/api/auth/verifyotp", { email });
+      const response = await axios.post(backendUrl + "/api/auth/verifyotp", {
+        email,
+      });
       if (response.data.success) {
         alert(response.data.msg);
         setStep(2);
@@ -28,7 +32,10 @@ const ResetPass = () => {
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://mern-auth-server-xifg.onrender.com/api/auth/verifyemail", { email, otp });
+      const response = await axios.post(backendUrl + "/api/auth/verifyemail", {
+        email,
+        otp,
+      });
       if (response.data.success) {
         alert(response.data.msg);
         setStep(3);
@@ -42,7 +49,10 @@ const ResetPass = () => {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://mern-auth-server-xifg.onrender.com/api/auth/resetpassword", { email, otp, newPassword });
+      const response = await axios.post(
+        backendUrl + "/api/auth/resetpassword",
+        { email, otp, newPassword }
+      );
       if (response.data.success) {
         alert(response.data.msg);
         navigate("/login");
@@ -73,7 +83,10 @@ const ResetPass = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       {step === 1 && (
-        <form onSubmit={handleEmailSubmit} className="bg-gray-800 p-8 rounded-lg shadow-lg">
+        <form
+          onSubmit={handleEmailSubmit}
+          className="bg-gray-800 p-8 rounded-lg shadow-lg"
+        >
           <h2 className="text-2xl font-bold text-white mb-4">Reset Password</h2>
           <input
             type="email"
@@ -83,36 +96,52 @@ const ResetPass = () => {
             required
             className="w-full p-3 mb-4 bg-gray-700 text-white rounded-lg"
           />
-          <button type="submit" className="w-full bg-indigo-500 text-white p-3 rounded-lg">
+          <button
+            type="submit"
+            className="w-full bg-indigo-500 text-white p-3 rounded-lg"
+          >
             Send OTP
           </button>
         </form>
       )}
 
       {step === 2 && (
-        <form onSubmit={handleOtpSubmit} className="bg-gray-800 p-8 rounded-lg shadow-lg">
+        <form
+          onSubmit={handleOtpSubmit}
+          className="bg-gray-800 p-8 rounded-lg shadow-lg"
+        >
           <h2 className="text-2xl font-bold text-white mb-4">Enter OTP</h2>
           <div className="flex justify-between" onPaste={handlePaste}>
-            {Array(6).fill(0).map((_, index) => (
-              <input
-                key={index}
-                type="text"
-                maxLength="1"
-                className="w-12 h-12 bg-gray-700 text-white text-center text-xl rounded-lg"
-                ref={(el) => (inputRef.current[index] = el)}
-                onInput={(e) => handleInput(e, index)}
-              />
-            ))}
+            {Array(6)
+              .fill(0)
+              .map((_, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  maxLength="1"
+                  className="w-12 h-12 bg-gray-700 text-white text-center text-xl rounded-lg"
+                  ref={(el) => (inputRef.current[index] = el)}
+                  onInput={(e) => handleInput(e, index)}
+                />
+              ))}
           </div>
-          <button type="submit" className="w-full bg-indigo-500 text-white p-3 mt-4 rounded-lg">
+          <button
+            type="submit"
+            className="w-full bg-indigo-500 text-white p-3 mt-4 rounded-lg"
+          >
             Verify OTP
           </button>
         </form>
       )}
 
       {step === 3 && (
-        <form onSubmit={handlePasswordSubmit} className="bg-gray-800 p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold text-white mb-4">Set New Password</h2>
+        <form
+          onSubmit={handlePasswordSubmit}
+          className="bg-gray-800 p-8 rounded-lg shadow-lg"
+        >
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Set New Password
+          </h2>
           <input
             type="password"
             placeholder="New Password"
@@ -121,7 +150,10 @@ const ResetPass = () => {
             required
             className="w-full p-3 mb-4 bg-gray-700 text-white rounded-lg"
           />
-          <button type="submit" className="w-full bg-indigo-500 text-white p-3 rounded-lg">
+          <button
+            type="submit"
+            className="w-full bg-indigo-500 text-white p-3 rounded-lg"
+          >
             Reset Password
           </button>
         </form>

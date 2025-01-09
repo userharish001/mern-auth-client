@@ -150,9 +150,10 @@ const Login = () => {
           <span className="text-gray-400">Don't have an account?</span>
           <button onClick={()=>setState('Login')} onDoubleClick={()=>setState('Sign Up')}
             className="font-medium text-indigo-500 hover:text-indigo-400"
-          >Sign Up
+          >Sign Up 
           </button>
         </div>}
+        {state !== 'Sign Up' && <p className="text-center text-white">Double click to sign up </p>}
       </div>
     </div>
   );
